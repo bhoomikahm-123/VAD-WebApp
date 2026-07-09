@@ -57,13 +57,21 @@ Windows
 Mac/Linux
 
 source .venv/bin/activate
+```
+
+```bash
 2. Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
+```
+```bash
 3. Run the app
 python app.py
+```
+```bash
 4. Open in browser
 http://127.0.0.1:5000
+```
 📤 Upload Behavior
 Upload a .wav or .flac file
 Output folder is cleared on each upload
