@@ -73,15 +73,16 @@ python app.py
 http://127.0.0.1:5000
 ```
 📤 Upload Behavior
-Upload a .wav or .flac file
-Output folder is cleared on each upload
-Speech segments are detected and displayed
-Extracted clips saved as:
-sample_<filename>_segment_<n>.wav
+- Upload a .wav or .flac file
+- Output folder is cleared on each upload
+- Speech segments are detected and displayed
+- Extracted clips saved as:
+- sample_<filename>_segment_<n>.wav
 
 🧠 VAD Integration
 
 The app uses functions from vad.py:
+
 process_audio(file_path)
 
 Returns:
