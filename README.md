@@ -23,18 +23,18 @@ Users can upload an audio file and the app will:
 
 
 vad-web-app/
-├── app.py # Flask application
-├── vad.py # VAD logic (process_audio, save_segments)
+├── app.py                # Flask application
+├── vad.py                # VAD logic (process_audio, save_segments)
 ├── templates/
-│ └── index.html # Frontend UI
-├── static/ # Static assets (optional)
-├── uploads/ # Uploaded audio files
-├── output/ # Extracted speech segments
-├── data/ # Sample data (optional)
-│ └── test_data/
+│   └── index.html        # Frontend UI
+├── static/               # Static assets (optional)
+├── uploads/              # Uploaded audio files
+├── output/               # Extracted speech segments
+├── data/                 # Sample data (optional)
+│   └── test_data/
 ├── requirements.txt
-├── Procfile # For deployment
-└── runtime.txt # Python version (optional)
+├── Procfile              # For deployment
+└── runtime.txt           # Python version (optional)
 
 
 ---
