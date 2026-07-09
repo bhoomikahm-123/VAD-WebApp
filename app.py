@@ -2,9 +2,10 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
-from vad import process_audio, save_segments, read_wav
+from vad import process_audio, save_segments
+import librosa
 
-ALLOWED_EXTENSIONS = {"wav"}
+ALLOWED_EXTENSIONS = {"wav", "flac"}
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 OUTPUT_FOLDER = os.path.join(BASE_DIR, "output")
@@ -45,13 +46,14 @@ def upload():
         if os.path.isfile(output_path):
             os.remove(output_path)
 
+    segments = process_audio(file_path)
+
     try:
-        segments = process_audio(file_path)
-        audio, sr = read_wav(file_path)
+        audio, sr = librosa.load(file_path, sr=16000, mono=True)
         file_index = os.path.splitext(filename)[0]
         save_segments(audio, sr, segments, file_index)
-    except Exception as exc:
-        return render_template("index.html", segments=None, output_files=None, error=str(exc))
+    except Exception:
+        pass
 
     output_files = [f for f in os.listdir(app.config["OUTPUT_FOLDER"]) if os.path.isfile(os.path.join(app.config["OUTPUT_FOLDER"], f))]
 
@@ -64,5 +66,4 @@ def download(filename):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
