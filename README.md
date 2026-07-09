@@ -142,9 +142,3 @@ Give it a ⭐ on GitHub and share!
 
 ---
 
-## ✅ Now do this
-
-```bash
-git add README.md
-git commit -m "Added clean README"
-git push
