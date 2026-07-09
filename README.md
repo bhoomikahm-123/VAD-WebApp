@@ -1,88 +1,140 @@
-# VAD Web App
+# 🎙️ VAD Web App
 
-Minimal Flask web UI for the existing RMS-based Voice Activity Detection (VAD).
+A minimal Flask-based web application for **Voice Activity Detection (VAD)** using RMS energy.
 
-Project structure
+Users can upload an audio file and the app will:
+- Detect speech segments
+- Display timestamps
+- Extract and save audio clips
+
+---
+
+## 🚀 Features
+
+- Upload `.wav` or `.flac` audio files
+- Detect speech segments (start & end time)
+- Automatically extract speech clips
+- Download processed audio segments
+- Simple and clean UI
+
+---
+
+## 📁 Project Structure
+
 
 vad-web-app/
-├── app.py                 # Flask application
-├── vad.py                 # Existing VAD logic (process_audio, save_segments)
+├── app.py # Flask application
+├── vad.py # VAD logic (process_audio, save_segments)
 ├── templates/
-│   └── index.html         # Upload form + results
-├── static/                # (optional) static assets
-├── uploads/               # Uploaded files are saved here
-├── output/                # Extracted speech clips are written here
-├── data/                  # (optional) sample data
-│   └── test_data/
-└── requirements.txt
+│ └── index.html # Frontend UI
+├── static/ # Static assets (optional)
+├── uploads/ # Uploaded audio files
+├── output/ # Extracted speech segments
+├── data/ # Sample data (optional)
+│ └── test_data/
+├── requirements.txt
+├── Procfile # For deployment
+└── runtime.txt # Python version (optional)
 
-Quick start (Windows PowerShell)
 
-1. Open a terminal and create / activate a virtual environment (optional but recommended):
+---
 
-```powershell
+## ⚙️ Setup & Run Locally
+
+### 1. Create virtual environment (recommended)
+
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
 
-2. Install dependencies:
+Activate:
 
-```powershell
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
+Windows
 
-3. Run the app locally:
+.\.venv\Scripts\activate
 
-```powershell
+Mac/Linux
+
+source .venv/bin/activate
+2. Install dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+3. Run the app
 python app.py
-```
-
-4. Open in your browser:
-
-```
+4. Open in browser
 http://127.0.0.1:5000
-```
+📤 Upload Behavior
+Upload a .wav or .flac file
+Output folder is cleared on each upload
+Speech segments are detected and displayed
+Extracted clips saved as:
+sample_<filename>_segment_<n>.wav
+🧠 VAD Integration
 
-Upload behavior
+The app uses functions from vad.py:
 
-- Upload a single `.wav` or `.flac` file from the UI.
-- On each new upload the app clears the `output/` folder and then processes the uploaded file.
-- Detected speech segments (start, end in seconds) appear on the page.
-- Extracted speech clips are saved to `output/` with names like `sample_<file>_segment_<n>.wav` and are available for download.
+process_audio(file_path)
 
-Notes about VAD integration
+Returns:
 
-- The app uses `process_audio(file_path)` from `vad.py`. That function should return a list of `(start_time, end_time)` tuples in seconds.
-- The app uses `save_segments(audio, sample_rate, segments, file_index)` to write audio clips to `output/`.
-- Do NOT modify `vad.py` unless you intend to change the VAD behavior.
+[(start_time, end_time), ...]
+save_segments(audio, sample_rate, segments, file_index)
+🌐 Deployment (Render)
 
-Making the app publicly accessible (quick options)
+Deploy easily on Render:
 
-- Local tunnel (temporary): use `ngrok`:
+👉 https://render.com
 
-```powershell
+Settings:
+
+Build Command
+
+pip install -r requirements.txt
+
+Start Command
+
+gunicorn app:app
+Required Files
+
+Procfile
+
+web: gunicorn app:app
+
+runtime.txt (optional)
+
+python-3.10.13
+⚠️ Notes
+Free tier sleeps after inactivity (~15 min)
+First request may take ~30–60 seconds (cold start)
+Avoid heavy dependencies for free deployment
+🔧 Optional: Temporary Public URL
+
+Use ngrok:
+
 ngrok http 5000
-```
+📦 Tech Stack
+Python
+Flask
+NumPy
+Audio Processing (RMS-based VAD)
+📌 Future Improvements
+Real-time audio detection
+Waveform visualization
+AI-based speech classification
+Upload multiple files
+👩‍💻 Author
 
-- Free hosting (persistent): deploy to Railway, Render, or Replit. Ensure `app.py` uses the `PORT` env var and binds `0.0.0.0`.
+Bhoomika HM
 
-Free deployment examples
+⭐ If you like this project
 
-- Railway: create a new Python service, link the repo, and deploy. The app will use `requirements.txt` and `Procfile`.
-- Render: create a new web service from the repo, choose Python, and set the startup command to `python app.py`.
-- Replit: import the repo, install dependencies, and run `python app.py`.
+Give it a ⭐ on GitHub and share!
 
-If you want a temporary public URL from your local machine, use `ngrok`:
 
-```powershell
-ngrok http 5000
-```
+---
 
-Production notes
+## ✅ Now do this
 
-- For production, run under a WSGI server (e.g. `waitress` on Windows or `gunicorn` on Linux) instead of `python app.py`.
-
-Contact
-
-If you want, I can create a prepared `Procfile`, Dockerfile, or step-by-step Railway deployment instructions next.
+```bash
+git add README.md
+git commit -m "Added clean README"
+git push
