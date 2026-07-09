@@ -2,10 +2,9 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
-from vad import process_audio, save_segments
-import librosa
+from vad import process_audio, save_segments, read_wav
 
-ALLOWED_EXTENSIONS = {"wav", "flac"}
+ALLOWED_EXTENSIONS = {"wav"}
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 OUTPUT_FOLDER = os.path.join(BASE_DIR, "output")
@@ -48,7 +47,7 @@ def upload():
 
     try:
         segments = process_audio(file_path)
-        audio, sr = librosa.load(file_path, sr=16000, mono=True)
+        audio, sr = read_wav(file_path)
         file_index = os.path.splitext(filename)[0]
         save_segments(audio, sr, segments, file_index)
     except Exception as exc:
