@@ -22,6 +22,7 @@ Users can upload an audio file and the app will:
 ## 📁 Project Structure
 
 
+```
 vad-web-app/
 ├── app.py                # Flask application
 ├── vad.py                # VAD logic (process_audio, save_segments)
