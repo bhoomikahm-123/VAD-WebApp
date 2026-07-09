@@ -1,203 +1,88 @@
-# 🎙️ Voice Activity Detection (VAD) Web App
+# VAD Web App
 
-A minimal Flask-based web interface for an RMS-based Voice Activity Detection (VAD) system. This application allows users to upload audio files, detect speech segments, and download extracted speech clips.
+Minimal Flask web UI for the existing RMS-based Voice Activity Detection (VAD).
 
----
+Project structure
 
-## 📌 Overview
-
-This project integrates a backend VAD pipeline with a simple web interface. It processes audio files to identify speech regions based on energy (RMS) thresholds and extracts those segments into separate `.wav` files.
-
----
-
-## 🧱 Project Structure
-
-```
 vad-web-app/
-├── app.py              # Flask application (routes + integration)
-├── vad.py              # Core VAD logic (DO NOT MODIFY)
+├── app.py                 # Flask application
+├── vad.py                 # Existing VAD logic (process_audio, save_segments)
 ├── templates/
-│   └── index.html      # UI: upload form + results display
-├── static/             # Optional static assets (CSS, JS)
-├── uploads/            # Stores uploaded audio files
-├── output/             # Stores extracted speech segments
-├── data/
-│   └── test_data/      # Optional sample dataset
-└── requirements.txt    # Dependencies
-```
+│   └── index.html         # Upload form + results
+├── static/                # (optional) static assets
+├── uploads/               # Uploaded files are saved here
+├── output/                # Extracted speech clips are written here
+├── data/                  # (optional) sample data
+│   └── test_data/
+└── requirements.txt
 
----
+Quick start (Windows PowerShell)
 
-## ⚙️ How It Works
+1. Open a terminal and create / activate a virtual environment (optional but recommended):
 
-1. User uploads an audio file (`.wav` or `.flac`)
-2. File is saved to `uploads/`
-3. `process_audio(file_path)` detects speech segments
-4. `save_segments(...)` extracts and saves segments to `output/`
-5. UI displays:
-
-   * Speech timestamps
-   * Download links for extracted clips
-
----
-
-## 🚀 Quick Start (Windows PowerShell)
-
-### 1. Create & Activate Virtual Environment
-
-```
+```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 2. Install Dependencies
+2. Install dependencies:
 
-```
+```powershell
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-### 3. Run Application
+3. Run the app locally:
 
-```
+```powershell
 python app.py
 ```
 
-### 4. Open in Browser
+4. Open in your browser:
 
 ```
 http://127.0.0.1:5000
 ```
 
----
+Upload behavior
 
-## 📤 Upload Behavior
+- Upload a single `.wav` or `.flac` file from the UI.
+- On each new upload the app clears the `output/` folder and then processes the uploaded file.
+- Detected speech segments (start, end in seconds) appear on the page.
+- Extracted speech clips are saved to `output/` with names like `sample_<file>_segment_<n>.wav` and are available for download.
 
-* Accepts `.wav` and `.flac` files
-* Clears `output/` before each new upload
-* Displays detected segments:
+Notes about VAD integration
 
-  ```
-  (0.55, 5.44)
-  (6.10, 8.20)
-  ```
-* Saves clips as:
+- The app uses `process_audio(file_path)` from `vad.py`. That function should return a list of `(start_time, end_time)` tuples in seconds.
+- The app uses `save_segments(audio, sample_rate, segments, file_index)` to write audio clips to `output/`.
+- Do NOT modify `vad.py` unless you intend to change the VAD behavior.
 
-  ```
-  sample_<file_index>_segment_<n>.wav
-  ```
-* Provides direct download links
+Making the app publicly accessible (quick options)
 
----
+- Local tunnel (temporary): use `ngrok`:
 
-## 🧠 VAD Integration Notes
-
-* `process_audio(file_path)`
-
-  * Returns: `[(start_time, end_time), ...]`
-* `save_segments(audio, sample_rate, segments, file_index)`
-
-  * Saves extracted audio clips
-
-⚠️ Do NOT modify `vad.py` unless changing detection logic.
-
----
-
-## 📸 Screenshots (Add These)
-
-Add screenshots inside a `screenshots/` folder and reference them here:
-
-### Upload Interface
-
-```
-![Upload UI](screenshots/upload.png)
-```
-
-### Results Display
-
-```
-![Results UI](screenshots/results.png)
-```
-
-👉 Tip: Capture:
-
-* Before upload screen
-* After processing results
-
----
-
-## 🌐 Making It Public
-
-### Option 1: Temporary (Local Tunnel)
-
-```
+```powershell
 ngrok http 5000
 ```
 
-### Option 2: Free Hosting
+- Free hosting (persistent): deploy to Railway, Render, or Replit. Ensure `app.py` uses the `PORT` env var and binds `0.0.0.0`.
 
-* Railway
-* Render
-* Replit
+Free deployment examples
 
-Ensure:
+- Railway: create a new Python service, link the repo, and deploy. The app will use `requirements.txt` and `Procfile`.
+- Render: create a new web service from the repo, choose Python, and set the startup command to `python app.py`.
+- Replit: import the repo, install dependencies, and run `python app.py`.
 
-```
-app.run(host="0.0.0.0", port=PORT)
-```
+If you want a temporary public URL from your local machine, use `ngrok`:
 
----
-
-## 🏭 Production Notes
-
-* Do NOT use Flask dev server in production
-* Use:
-
-  * `waitress` (Windows)
-  * `gunicorn` (Linux)
-
-Example:
-
-```
-pip install waitress
-waitress-serve --listen=0.0.0.0:5000 app:app
+```powershell
+ngrok http 5000
 ```
 
----
+Production notes
 
-## 🎯 Key Features
+- For production, run under a WSGI server (e.g. `waitress` on Windows or `gunicorn` on Linux) instead of `python app.py`.
 
-* Simple and clean web interface
-* RMS-based speech detection
-* Automatic audio segmentation
-* Downloadable outputs
-* Minimal and modular architecture
+Contact
 
----
-
-## ⚠️ Limitations
-
-* Sensitive to background noise
-* Fixed threshold-based detection
-* Not optimized for real-time streaming
-
----
-
-## 🔮 Future Improvements
-
-* Replace RMS with WebRTC or ML-based VAD
-* Add waveform visualization
-* Real-time microphone input
-* Improve noise robustness
-
----
-
-## 📬 Contact
-
-If you want help with:
-
-* Deployment (Railway/Render)
-* Docker setup
-* UI improvements
-
-Feel free to extend this project further.
+If you want, I can create a prepared `Procfile`, Dockerfile, or step-by-step Railway deployment instructions next.
