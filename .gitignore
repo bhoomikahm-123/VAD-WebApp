@@ -3,7 +3,6 @@ __pycache__/
 .env
 uploads/*
 output/*
-data/
 *.wav
 *.flac
 .DS_Store
