@@ -1,6 +1,4 @@
 flask
-gunicorn
 numpy
 librosa
 soundfile
-datasets
