@@ -46,14 +46,13 @@ def upload():
         if os.path.isfile(output_path):
             os.remove(output_path)
 
-    segments = process_audio(file_path)
-
     try:
+        segments = process_audio(file_path)
         audio, sr = librosa.load(file_path, sr=16000, mono=True)
         file_index = os.path.splitext(filename)[0]
         save_segments(audio, sr, segments, file_index)
-    except Exception:
-        pass
+    except Exception as exc:
+        return render_template("index.html", segments=None, output_files=None, error=str(exc))
 
     output_files = [f for f in os.listdir(app.config["OUTPUT_FOLDER"]) if os.path.isfile(os.path.join(app.config["OUTPUT_FOLDER"], f))]
 
@@ -66,4 +65,5 @@ def download(filename):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
