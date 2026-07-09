@@ -125,6 +125,11 @@
             </script>
 
             <div class="results">
+                {% if error %}
+                    <h2>Error</h2>
+                    <p style="color: red;">{{ error }}</p>
+                {% endif %}
+
                 {% if segments %}
                     <h2>Detected Segments</h2>
                     <ul>
